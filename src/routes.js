@@ -27,7 +27,7 @@ const routes = [
     layout: "/debugger",
     path: "/peripheral",
     icon: <Icon as={MdDeviceHub} width='20px' height='20px' color='inherit' />,
-    component: DataTable,
+    component: MainDashboard,
   },
 ];
 
