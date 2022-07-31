@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // Chakra imports
 import { Box, Flex, Icon, Text, useColorModeValue } from "@chakra-ui/react";
@@ -15,20 +15,23 @@ import {
 import { RiArrowUpSFill } from "react-icons/ri";
 import { barChartIptionsDebugButtons } from "variables/sotom_charts";
 import { debugCharValues } from "variables/sotom_charts";
+import ApiLoaderSotom from "api";
 
 export default function ButtonArrayDisplay(props) {
   const { value } = props;
 
-  const [barValues,setBarValues] = useState(debugCharValues)
+  const [barValues, setBarValues] = useState(debugCharValues)
+  const oldValue = useRef(0)
+  const curValue = useRef(0)
 
   // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
 
-  const valueToBar = (val)=>{
+  const valueToBar = (val) => {
     let len = 16;
     let arr = [];
-    for(let i = 0; i<len;i++){
-      if((val>>i)&0b1)arr.push(1)
+    for (let i = 0; i < len; i++) {
+      if ((val >> i) & 0b1) arr.push(1)
       else arr.push(0)
     }
     //arr.push(0.1)
@@ -36,15 +39,27 @@ export default function ButtonArrayDisplay(props) {
     return arr;
   }
 
-  useEffect(()=>{
-    //console.log(value)
+  const getAddressSuccess = (res) => {
+    if(oldValue.current == res.data.value) return;
+    curValue.current = res.data.value
     setBarValues([
       {
         name: "Buttons",
-        data: valueToBar(value),
+        data: valueToBar(res.data.value),
       },
     ])
-  },[value])
+    oldValue.current = res.data.value
+  }
+
+  useEffect(() => {
+    ApiLoaderSotom.searchMemory('DEBUG_BUTTON', getAddressSuccess, null)
+    const interval = setInterval(() =>
+      ApiLoaderSotom.searchMemory('DEBUG_BUTTON', getAddressSuccess, null),
+      333)
+    return () => {
+      clearInterval(interval);
+    }
+  }, [])
 
   return (
     <Card align='center' direction='column' w='100%' >
@@ -61,11 +76,12 @@ export default function ButtonArrayDisplay(props) {
           </Flex>
           <Flex align='end'>
             <Text
+            letterSpacing={3}
               color={textColor}
               fontSize='34px'
               fontWeight='700'
               lineHeight='100%'>
-              0x{value.toString(16)}
+              0x{curValue.current.toString(16).padStart(4, '0')}
             </Text>
             <Text
               ms='6px'

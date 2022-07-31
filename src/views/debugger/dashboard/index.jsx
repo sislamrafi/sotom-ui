@@ -49,11 +49,15 @@ import { AnalogSlider } from "./components/AnalogSlider";
 import ApexChart from "./components/RealtimeChart";
 import ApiLoaderSotom from "api";
 import StatusCards from "./components/StatusCards";
+import { DeviceContext } from "contexts/DeviceContext";
+import { useRef } from "react";
 
 export default function UserReports() {
   // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+
+  const [example,setExample] = useState(10);
 
 
   const [debugButton, setDebugButton] = useState(1)
@@ -71,20 +75,6 @@ export default function UserReports() {
     return Math.round(number / Math.pow(div, i), 2) + ' ' + sizes[i] + ext;
   }
 
-  const callMemoryInfoApi = () => {
-    axios.get(process.env.REACT_APP_API_URL + "get_memory_info/", {
-      params: {
-
-      }
-    })
-      .then(res => {
-        //console.log(res.data);
-        changeCardValuesIfChanged(res.data)
-      })
-      .catch(err => {
-
-      })
-  }
 
   const changeCardValuesIfChanged = (data) => {
     if (data.status !== 'ok') return
@@ -101,6 +91,8 @@ export default function UserReports() {
     let dbd = data.debug_button
     let dba = data.debug_button_addr
     let dbaa = data.debug_analog_io_addr
+
+    //setExample(ss);
     //RamGraph[0].data.push(data.stack_size + data.data_size + data.bss_size)
     //RamGraph[1].data.push(data.stack_size)
     //RamGraphOptions.xaxis.categories.append(18)
@@ -149,38 +141,38 @@ export default function UserReports() {
 
 
   useEffect(() => {
-    console.log("Init Once");
-    callMemoryInfoApi()
-    const interval = setInterval(() => callMemoryInfoApi(), 3000)
-    return () => {
-      clearInterval(interval);
-    }
+    // console.log("Init Once");
+    // callMemoryInfoApi()
+    // const interval = setInterval(() => callMemoryInfoApi(), 300)
+    // return () => {
+    //   clearInterval(interval);
+    // }
   }, [])
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+      <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
 
-      <StatusCards boxBg={boxBg} brandColor={brandColor} />
+        <StatusCards boxBg={boxBg} brandColor={brandColor} />
 
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <ApexChart />
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px'>
-          <ButtonArrayClickable value={debugButton} dbgAddress={addressOfButtons} />
-          <ButtonArrayDisplay value={debugButton} />
+        <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
+          <ApexChart />
+          <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px'>
+            <ButtonArrayClickable value={debugButton} dbgAddress={addressOfButtons} />
+            <ButtonArrayDisplay value={debugButton} />
 
+          </SimpleGrid>
         </SimpleGrid>
-      </SimpleGrid>
-      <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px'>
-          <AnalogSlider address={addressOfAnalogDebug} />
-          <SearchAddress value={debugButton} />
-        </SimpleGrid>
+        <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
+          <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px'>
+            <AnalogSlider address={addressOfAnalogDebug} />
+            <SearchAddress value={debugButton} />
+          </SimpleGrid>
 
-        <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
-          <PieCard />
-          <MiniCalendar h='100%' minW='100%' selectRange={false} />
+          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
+            <PieCard />
+            <MiniCalendar h='100%' minW='100%' selectRange={false} />
+          </SimpleGrid>
         </SimpleGrid>
-      </SimpleGrid>
-    </Box>
+      </Box>
   );
 }

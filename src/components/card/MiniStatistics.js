@@ -17,7 +17,7 @@ import React, { memo, useEffect } from "react";
 import { MdAutoAwesomeMotion } from "react-icons/md";
 
 function Default(props) {
-  const { iconS , brandColor, boxBg, endContent, name, growth, value, growthTxt } = props;
+  const { iconS, brandColor, boxBg, endContent, name, growth, value, growthTxt } = props;
   const textColor = useColorModeValue("secondaryGray.900", "white");
   const textColorSecondary = "secondaryGray.600";
 
@@ -32,14 +32,17 @@ function Default(props) {
         h='100%'
         align={{ base: "center", xl: "start" }}
         justify={{ base: "center", xl: "center" }}>
-        
-        <IconBox
-          w='56px'
-          h='56px'
-          //bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
-          bg={boxBg}
-          icon={<Icon w='28px' h='28px' as={iconS} color={brandColor} />}
-        />
+        {
+          iconS &&
+          (<IconBox
+            w='56px'
+            h='56px'
+            //bg='linear-gradient(90deg, #4481EB 0%, #04BEFE 100%)'
+            bg={boxBg}
+            icon={<Icon w='28px' h='28px' as={iconS} color={brandColor} />}
+          />)
+          
+        }
 
         <Stat my='auto' ms={iconS ? "18px" : "0px"}>
           <StatLabel

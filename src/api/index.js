@@ -53,29 +53,58 @@ class ApiLoaderSotom {
             .get(ApiLoaderSotom.getHostURL() + "command_device/", {
                 params: {
                     'command': command,
-                    'address':address,
+                    'address': address,
                     'value': value,
                 }
             })
             .then(res => {
                 console.log(res.data);
-                
-                if(command!=null)
-                window.miniTerminal.updateText("\n>> " + command, false)
-                if(address!=null)
-                window.miniTerminal.updateText(' , ' + address, false)
-                if(value!=null)
-                window.miniTerminal.updateText(' , ' +value, false)
-                onSuccessCallback(res);
+
+                if (command != null)
+                    window.miniTerminal.updateText("\n>> " + command, false)
+                if (address != null)
+                    window.miniTerminal.updateText(' , 0x' + (address.toString(16)), false)
+                if (value != null)
+                    window.miniTerminal.updateText(' , ' + value, false)
+                if (onSuccessCallback != null)
+                    onSuccessCallback(res);
             })
             .catch(err => {
-                
-                window.miniTerminal.updateText("\n>> Failed "+command, false)
+
+                window.miniTerminal.updateText("\n>> Failed " + command, false)
                 onFailureCallback(err)
             })
     }
 
+    static getMemoryInfo(onSuccessCallback, onFailureCallback) {
+        axios
+            .get(ApiLoaderSotom.getHostURL() + "get_memory_info/", {
+                params: {
 
+                }
+            })
+            .then(res => {
+                onSuccessCallback(res)
+            })
+            .catch(err => {
+                onFailureCallback(err)
+            })
+    }
+
+    static searchMemory(value, onSuccessCallback, onFailureCallback) {
+        axios
+            .get(ApiLoaderSotom.getHostURL() + "search_memory/", {
+                params: {
+                    'value': value
+                }
+            })
+            .then(res => {
+                onSuccessCallback(res)
+            })
+            .catch(err => {
+                onFailureCallback(err)
+            })
+    }
 }
 
 export default ApiLoaderSotom;

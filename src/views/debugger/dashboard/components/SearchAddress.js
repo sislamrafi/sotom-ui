@@ -18,6 +18,7 @@ import { debugCharValues } from "variables/sotom_charts";
 import { SearchBar } from "components/navbar/searchBar/SearchBar";
 import { VSeparator } from "components/separator/Separator";
 import axios from "axios";
+import ApiLoaderSotom from "api";
 
 export default function SearchAddress(props) {
   const { value } = props;
@@ -32,35 +33,32 @@ export default function SearchAddress(props) {
   const [variableName, setVariableName] = useState(null)
   const [valueReg, setValueReg] = useState(0)
 
+  const onSuccessCallback = (res) => {
+    var sec = 'Section: ' + res.data['section'] + ' (Size: ' + res.data['size'] + ')'
+    setSearchFound(sec)
+    setValueReg(res.data['value'] ?? 0)
+    setVariableName(res.data['name'])
+    setAddress(res.data['address'])
+    window.miniTerminal.updateText("\n>> 0x" + res.data['address'].toString(16)+', '+res.data['value'], false)
+  }
+
+  const onFailureCallback = (err) => {
+    setSearchFound('Error')
+    window.miniTerminal.updateText("\n>> Search failed", false)
+  }
+
   const callMemorySearchApi = (value) => {
-    axios.get(process.env.REACT_APP_API_URL + "search_memory/", {
-      params: {
-        'value': value
-      }
-    })
-      .then(res => {
-        console.log(res.data);
-        console.log('returned api')
-        var sec = 'Section: '+res.data['section']+' (Size: '+res.data['size']+')'
-        setSearchFound(sec)
-        setValueReg(res.data['value']??0)
-        setVariableName(res.data['name'])
-        setAddress(res.data['address'])
-      })
-      .catch(err => {
-        setSearchFound('Error')
-      })
+    ApiLoaderSotom.searchMemory(value,onSuccessCallback,onFailureCallback)
   }
 
   const onSearchClicked = (txt) => {
     console.log("Search Button clicked from parent: +" + txt);
-    //setValueReg(554454)
     callMemorySearchApi(txt.toString())
   }
 
   useEffect(() => {
     console.log("Search Button Init");
-  },[])
+  }, [])
 
   return (
     <Card align='center' direction='column' w='100%' >
@@ -120,7 +118,7 @@ export default function SearchAddress(props) {
               fontSize={{
                 base: "xl",
               }} fontWeight='600'>
-              {address!=null? '0x'+address.toString(16) : 'No address'}
+              {address != null ? '0x' + address.toString(16) : 'No address'}
             </Text>
           </Card>
         </SimpleGrid>

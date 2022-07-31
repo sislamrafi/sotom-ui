@@ -20,6 +20,7 @@ export function AnalogSlider(props) {
 
     const sliderValueRefCurrent = useRef(0)
     const sliderValueRefPast = useRef(0)
+    const addressValue = useRef(0)
 
     const labelStyles = {
         mt: '2',
@@ -27,37 +28,51 @@ export function AnalogSlider(props) {
         fontSize: 'sm',
     }
 
+    const onSuccessCallback = ()=>{
+
+    }
+
     const callCommand = () => {
         //setSendForApi(prv=>!prv)
         let cur = sliderValueRefCurrent.current
         let past = sliderValueRefPast.current
         //console.log("analog slider :" +past+ " "+cur);
-        if(cur===past)return;
-        console.log("analog slider Api gone");
+        if (cur === past) return;
+        //console.log("analog slider Api gone + "+(' '+addressValue.current+' ').toString(16));
         sliderValueRefPast.current = cur;
         let command = 'write16'
 
-        ApiLoaderSotom.commandDevice(command,props.address,cur)
+        ApiLoaderSotom.commandDevice(command, addressValue.current, cur, onSuccessCallback)
     }
 
     const handelSliderValue = (val) => {
         console.log(val);
         setSliderValue(val);
-        sliderValueRefCurrent.current=val
+        sliderValueRefCurrent.current = val
+    }
+
+    const getAddressSuccess = (res) => {
+        addressValue.current = res.data.address
+        setSliderValue(res.data.value)
     }
 
     useEffect(() => {
-        console.log(props.address);
         setPrvSliderVal(sliderValue)
+        ApiLoaderSotom.searchMemory('DEBUG_ANALOG_IO',getAddressSuccess,null)
         const interval = setInterval(() => callCommand(), 250)
+        const interval1 = setInterval(() =>
+            ApiLoaderSotom.searchMemory('DEBUG_ANALOG_IO',getAddressSuccess,null),
+            2000)
         return () => {
             clearInterval(interval);
+            clearInterval(interval1);
         }
     }, [])
 
     return (
         <Card p='20px' align='center' direction='column' w='100%' >
-            <Flex justify='space-between' align='start' px='10px' pt='5px'>
+            
+             <Flex justify='space-between' align='start' px='10px' pt='5px'>
                 <Flex
                     px={{ base: "0px", "2xl": "10px" }}
                     justifyContent='space-between'
@@ -91,7 +106,7 @@ export function AnalogSlider(props) {
                 mt='15px'
                 mx='auto'>
 
-                <Slider minH='15' min={0} max={0xffff} aria-label='slider-ex-6' defaultValue={sliderValue} onChange={(val) => handelSliderValue(val)}>
+                <Slider value={sliderValue} minH='15' min={0} max={0xffff} aria-label='slider-ex-6' defaultValue={sliderValue} onChange={(val) => handelSliderValue(val)}>
                     <SliderMark value={((0xffff - 1) * 0.25).toFixed(0)} {...labelStyles}>
                         {((0xffff - 1) * 0.25).toFixed(0)}
                     </SliderMark>

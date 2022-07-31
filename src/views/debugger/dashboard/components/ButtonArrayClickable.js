@@ -5,11 +5,11 @@ import Card from "components/card/Card.js";
 import PieChart from "components/charts/PieChart";
 import { pieChartData, pieChartOptions } from "variables/charts";
 import { VSeparator } from "components/separator/Separator";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
+import ApiLoaderSotom from "api";
 
 export default function ButtonArrayClickable(props) {
-  const { value, dbgAddress } = props;
   const buttonSize = 16
 
   const valueToBar = (val) => {
@@ -24,8 +24,12 @@ export default function ButtonArrayClickable(props) {
     return arr;
   }
 
-  const [switchArray, setSwitchArray] = useState(valueToBar(2))
-  const [address, setAddress] = useState(null)
+  const [switchArray, setSwitchArray] = useState(valueToBar(0))
+  
+
+  const analogIoAddress = useRef(0)
+  const oldValue = useRef(0)
+
 
   // Chakra Color Mode
   const textColor = useColorModeValue("secondaryGray.900", "white");
@@ -35,24 +39,51 @@ export default function ButtonArrayClickable(props) {
     "unset"
   );
 
+  const onSuccessCall = (res) => {
+    analogIoAddress.current = res.data.address
+    if (oldValue.current == res.data.value)return;
+    oldValue.current = res.data.value
+    setSwitchArray(valueToBar(res.data.value))
+  }
+
+  const handlechange = (e, index) => {
+    let val = valueToBar(oldValue.current);
+    val[index] = val[index] ? false : true;
+    setSwitchArray(val)
+    let command = 'write16'
+    if(val[index])
+    oldValue.current |= (1<<index)
+    else
+    oldValue.current &= ~(1<<index)
+    ApiLoaderSotom.commandDevice(command, analogIoAddress.current, oldValue.current, null)
+  }
+
 
   useEffect(() => {
     //console.log("Updating...............");
     //console.log(switchArray);
-    let getNewValue = false;
-    for (let i = 0; i < switchArray.length; i++) {
-      if (switchArray[i] != valueToBar(value)[i]) getNewValue = true;
-    }
-    if (getNewValue) {
-      //console.log("New value get In ButtonArrray");
-      setSwitchArray(valueToBar(value))
-    }
+    // let getNewValue = false;
+    // for (let i = 0; i < switchArray.length; i++) {
+    //   if (switchArray[i] != valueToBar(value)[i]) getNewValue = true;
+    // }
+    // if (getNewValue) {
+    //   //console.log("New value get In ButtonArrray");
+    //   setSwitchArray(valueToBar(value))
+    // }
 
-    if (address != dbgAddress) {
-      //console.log("New address get In ButtonArrray " + dbgAddress);
-      setAddress(dbgAddress)
+    // if (address != dbgAddress) {
+    //   //console.log("New address get In ButtonArrray " + dbgAddress);
+    //   setAddress(dbgAddress)
+    // }
+
+    ApiLoaderSotom.searchMemory("DEBUG_BUTTON", onSuccessCall)
+    const interval = setInterval(() =>
+      ApiLoaderSotom.searchMemory('DEBUG_BUTTON', onSuccessCall, null),
+      333)
+    return () => {
+      clearInterval(interval);
     }
-  }, [value, dbgAddress])
+  }, [])
 
   return (
     <Card p='20px' align='center' direction='column' w='100%' >
@@ -81,7 +112,18 @@ export default function ButtonArrayClickable(props) {
         mt='15px'
         mx='auto'>
 
-        <CheckboxArray value={value} address={address} array={switchArray} />
+        <CheckboxGroup colorScheme='blue' defaultValue={[switchArray]}>
+          <SimpleGrid minChildWidth='30px' spacing={2}>
+            {useMemo(() => {
+              return switchArray.map((x, i) =>
+                <Checkbox onChange={(e) => handlechange(e, i)} isChecked={x} key={i} size='sm' >  {i.toString()}&nbsp;</Checkbox>);
+            })}
+            
+
+          </SimpleGrid>
+          {/* <Checkbox onChange={(e) =>this.handlechange(e,3)} isChecked={this.state.cb1}  size='sm' > h</Checkbox>
+        <Text>{this.state.array[5]+'s'}</Text> */}
+        </CheckboxGroup>
 
       </Card>
     </Card>
@@ -105,7 +147,7 @@ class CheckboxArray extends React.Component {
     var val = value;
     var valueX
 
-    console.log("api :++>> "+(value === true))
+    console.log("api :++>> " + (value === true))
 
     if (value === true) {
       valueX = this.state.value | (1 << pin);
@@ -114,7 +156,7 @@ class CheckboxArray extends React.Component {
       valueX = this.state.value & ~(1 << pin);
     }
 
-    console.log("api call write16: " + this.state.address + ' prvVal:'+ this.state.value + ' valueR:' + val + ' valueP:' + valueX + ' pin:' + pin)
+    console.log("api call write16: " + this.state.address + ' prvVal:' + this.state.value + ' valueR:' + val + ' valueP:' + valueX + ' pin:' + pin)
 
     axios.get(process.env.REACT_APP_API_URL + "command_device/", {
       params: {

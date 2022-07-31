@@ -1,5 +1,5 @@
 import { Icon, SimpleGrid, Text } from "@chakra-ui/react"
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
     MdOutlineMemory,
     MdOutlineSdStorage, MdOutlineLanguage,
@@ -7,17 +7,20 @@ import {
 } from "react-icons/md";
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
+import { DeviceContext } from "contexts/DeviceContext";
+import ApiLoaderSotom from "api";
 
 export default function StatusCards(props) {
     const { boxBg, brandColor } = props
 
-    const flashSizeX = useRef(0)
-    const [flashSize, setFlashSize] = useState('Loading..')
-    const [sramSize, setSramSize] = useState('Loading..')
-    const [flashInfo, setFlashInfo] = useState({ used: 'loading..', free: 'loading..' })
-    const [globalVariableSize, setGlobalVariableSize] = useState('Loading..')
-    const [stackSize, setStackSize] = useState('Loading..')
-    const [sysClockSpeed, setSysClockSpeed] = useState('Loading..')
+    const flashSize = useRef('Loading..')
+    const sramSize = useRef('Loading..')
+    const flashInfo = useRef({ used: 'loading..', free: 'loading..' })
+    const globalVariableSize = useRef('Loading..')
+    const stackSize = useRef('Loading..')
+    const sysClockSpeed = useRef('Loading..')
+
+    const [state, setState] = useState(0)
 
     function numToSize(number, ext = 'B', div = 1024) {
         var sizes = ['', 'K', 'M', 'G', 'T'];
@@ -26,10 +29,8 @@ export default function StatusCards(props) {
         return Math.round(number / Math.pow(div, i), 2) + ' ' + sizes[i] + ext;
     }
 
-    const changeCardValuesIfChanged = (data) => {
+    let changeCardValuesIfChanged = (data) => {
         if (data.status !== 'ok') return
-
-        //console.log('counter :'+counter);
 
         let fs = numToSize(data.total_flash)
         let ms = numToSize(data.total_sram)
@@ -38,71 +39,50 @@ export default function StatusCards(props) {
         let ss = numToSize(data.stack_size + data.data_size + data.bss_size)
         let sclk = numToSize(data.sys_clock_speed, 'Hz', 1000)
         let ffs = ((data.total_flash - data.text_size) / data.total_flash) * 100;
-        let dbd = data.debug_button
-        let dba = data.debug_button_addr
-        let dbaa = data.debug_analog_io_addr
-        //RamGraph[0].data.push(data.stack_size + data.data_size + data.bss_size)
-        //RamGraph[1].data.push(data.stack_size)
-        //RamGraphOptions.xaxis.categories.append(18)
 
-        // if (fs != flashSize){
-        //   console.log("Flash Size %d , %d",fs,flashSize)
-        //   setFlashSize(fs)
-        // }
+        if (fs != flashSize.current) {
+            console.log("Flash Size %d , %d", fs, flashSize)
+            flashSize.current = fs
+        }
 
-        // if (ms != sramSize)
-        //   setSramSize(ms)
+        if (ms != sramSize.current) {
+            sramSize.current = ms
+        }
 
-        // if (cs != flashInfo.used)
-        //   setFlashInfo({ used: cs, free: ffs.toFixed(2) + '%' })
+        if (cs != flashInfo.current.used) {
+            flashInfo.current = { used: cs, free: ffs.toFixed(2) + '%' }
+        }
 
-        // if (gbs != globalVariableSize)
-        //   setGlobalVariableSize(gbs)
+        if (gbs != globalVariableSize.current)
+            globalVariableSize.current = gbs
 
-        // if (ss != stackSize) {
-        //   setStackSize(ss)
-        //   setRamGraphPoint({ stack: data.stack_size, ram: data.stack_size + data.data_size + data.bss_size })
-        // }
+        if (ss != stackSize.current) {
+            stackSize.current = ss
+            if (window.setSramUsage != null) {
+                window.$ram_usage = []
+            }
+            window.setSramUsage(data.stack_size + data.data_size + data.bss_size)
+            setState(prv => prv + 1)
+        }
 
-        // if (sclk != sysClockSpeed) {
-        //   //console.log("address sys clock");
-        //   setSysClockSpeed(sclk)
-        // }
-
-        // if (dbaa != addressOfAnalogDebug) {
-        //   setAddressOfAnalogDebug(dbaa)
-        // }
-
-        // if (dba != addressOfButtons) {
-        //   //console.log("address update in main :" + addressOfButtons + ' ' + dba);
-        //   setaddressOfButtons(dba)
-        // }
-
-        // if (dbd != debugButton) {
-        //   //console.log('address')
-        //   setDebugButton(dbd)
-        // }
-
-        //setFlashSize(prv=>prv+1);
+        if (sclk != sysClockSpeed.current) {
+            sysClockSpeed.current = sclk
+        }
 
     }
 
-    const testCall = () => {
-        //setFlashSize("500B")
-        setSramSize(prv => prv + 1)
-        //setFlashSizeX(prv=>prv+1) 
-        flashSizeX.current += 1
+    const onSuccessCallback = (res) => {
+        changeCardValuesIfChanged(res.data)
     }
 
     useEffect(() => {
-        console.log("Init Once");
-        // callMemoryInfoApi()
-        setSramSize(0)
-        const interval = setInterval(() => testCall(), 300)
+        const interval = setInterval(() => ApiLoaderSotom.getMemoryInfo(onSuccessCallback), 300)
         return () => {
             clearInterval(interval);
         }
     }, [])
+
+    const value = React.useContext(DeviceContext)
 
 
     return (
@@ -111,45 +91,45 @@ export default function StatusCards(props) {
             gap='20px'
             mb='20px'>
             <MiniStatistics
-                iconS = {MdOutlineSdStorage}
-                brandColor = {brandColor}
-                boxBg = {boxBg}
+                iconS={MdOutlineSdStorage}
+                brandColor={brandColor}
+                boxBg={boxBg}
                 name='Flash Size'
-                value={flashSize}
+                value={flashSize.current}
             />
             <MiniStatistics
-                iconS = {MdOutlineMemory}
-                brandColor = {brandColor}
-                boxBg = {boxBg}
+                iconS={MdOutlineMemory}
+                brandColor={brandColor}
+                boxBg={boxBg}
                 name='SRAM Size'
-                value={sramSize}
+                value={sramSize.current}
             />
 
-            <MiniStatistics growth={flashInfo.free} name='Flash Used' value={flashInfo.used} growthTxt="Free Flash Space" />
+            <MiniStatistics growth={flashInfo.current.free} name='Flash Used' value={flashInfo.current.used} growthTxt="Free Flash Space" />
 
             <MiniStatistics
-                iconS = {MdOutlineLanguage}
-                brandColor = {brandColor}
-                boxBg = {boxBg}
+                iconS={MdOutlineLanguage}
+                brandColor={brandColor}
+                boxBg={boxBg}
                 name='Global Variables'
-                value={globalVariableSize}
+                value={globalVariableSize.current}
             />
 
             <MiniStatistics
-                iconS = {MdAutoAwesomeMotion}
-                brandColor = {brandColor}
-                boxBg = {boxBg}
+                iconS={MdAutoAwesomeMotion}
+                brandColor={brandColor}
+                boxBg={boxBg}
                 growth="In Last 1.5"
                 growthTxt="Seconds"
                 name='SRAM Usage'
-                value={stackSize}
+                value={stackSize.current}
             />
             <MiniStatistics
-                iconS = {MdOutlineSpeed}
-                brandColor = {brandColor}
-                boxBg = {boxBg}
+                iconS={MdOutlineSpeed}
+                brandColor={brandColor}
+                boxBg={boxBg}
                 name='System Clock'
-                value={sysClockSpeed}
+                value={sysClockSpeed.current}
             />
         </SimpleGrid>
     )

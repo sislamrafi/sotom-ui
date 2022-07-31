@@ -1,8 +1,8 @@
 // Total Spent Default
 
-const GraphXAxis = (len)=>{
+const GraphXAxis = (len) => {
   let arr = []
-  for(let i=0;i<len;i++){
+  for (let i = 0; i < len; i++) {
     arr.push(i);
   }
 }
@@ -62,7 +62,7 @@ export const RamGraphOptions = {
     type: "numeric",
     categories: GraphXAxis(35),//[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, ],
     labels: {
-      show:false,
+      show: false,
       style: {
         colors: "#A3AED0",
         fontSize: "12px",
@@ -124,18 +124,25 @@ export const barChartIptionsDebugButtons = {
     toolbar: {
       show: false,
     },
+    animations: {
+      enabled: true,
+      easing: 'linear',
+      dynamicAnimation: {
+        speed: 100
+      }
+    },
   },
   tooltip: {
     style: {
       fontSize: "12px",
       fontFamily: undefined,
     },
-    onDatasetHover: {
-      style: {
-        fontSize: "12px",
-        fontFamily: undefined,
-      },
-    },
+    // onDatasetHover: {
+    //   style: {
+    //     fontSize: "12px",
+    //     fontFamily: undefined,
+    //   },
+    // },
     theme: "dark",
   },
   xaxis: {
