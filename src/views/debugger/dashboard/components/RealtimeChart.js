@@ -12,7 +12,7 @@ class ApexChart extends React.Component {
         this.aSpeed = 250
         this.newDataSize = 0
 
-        this.state = {
+        this.stateXX = {
 
             data: [0],
 
@@ -127,6 +127,8 @@ class ApexChart extends React.Component {
 
         };
 
+        this.state = this.stateXX
+
         window.setSramUsage = this.setRamUsage;
     }
 
@@ -139,7 +141,7 @@ class ApexChart extends React.Component {
 
     componentDidMount() {
 
-        window.setInterval(() => {
+        this.interval = setInterval(() => {
 
             if (this.newDataSize === 0) {
                 this.state.data.push(this.state.last_data)
@@ -147,7 +149,7 @@ class ApexChart extends React.Component {
             this.newDataSize = 0
 
             let mx = Math.max(...this.state.data.slice(-this.xRange))
-
+            //console.log(this.state.data.slice(-this.xRange))
             if (this.state.options.yaxis.max - 20 !== mx)
                 this.setState(prv => ({
                     ...prv,
@@ -161,9 +163,17 @@ class ApexChart extends React.Component {
                 }))
 
             ApexCharts.exec('realtime', 'updateSeries', [{
-                data: [... this.state.data]
+                data: this.state.data
             }])
-        }, this.aSpeed+250)
+        }, this.aSpeed + 250)
+    }
+
+    componentWillUnmount() {
+        this.state = this.stateXX
+        this.xRange = 50
+        this.aSpeed = 250
+        this.newDataSize = 0
+        clearInterval(this.interval)
     }
 
 
