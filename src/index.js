@@ -1,10 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import "assets/css/App.css";
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
-import DebuggerLayout from "layouts/debugger";
-import { ChakraProvider } from "@chakra-ui/react";
-import theme from "theme/theme";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import 'assets/css/App.css';
+import { HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import DebuggerLayout from 'layouts/debugger';
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from 'theme/theme';
+import Peripherals from 'views/debugger/peripherals';
 
 ReactDOM.render(
   <ChakraProvider theme={theme}>
@@ -12,10 +13,11 @@ ReactDOM.render(
       <HashRouter>
         <Switch>
           <Route path={`/debugger`} component={DebuggerLayout} />
-          <Redirect from='/' to='/debugger/dashboard' />
+          <Route path={`/debugger/peripherals`} component={Peripherals} />
+          <Redirect from='/' exact to='/debugger/dashboard' />
         </Switch>
       </HashRouter>
     </React.StrictMode>
   </ChakraProvider>,
-  document.getElementById("root")
+  document.getElementById('root')
 );
