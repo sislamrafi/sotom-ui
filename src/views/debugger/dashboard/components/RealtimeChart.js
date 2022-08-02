@@ -149,15 +149,17 @@ class ApexChart extends React.Component {
             this.newDataSize = 0
 
             let mx = Math.max(...this.state.data.slice(-this.xRange))
+            let min = Math.min(...this.state.data.slice(-this.xRange))
             //console.log(this.state.data.slice(-this.xRange))
-            if (this.state.options.yaxis.max - 20 !== mx)
+            if (this.state.options.yaxis.max - 20 !== mx || this.state.options.yaxis.min + 20 !== min)
                 this.setState(prv => ({
                     ...prv,
                     options: {
                         ...prv.options,
                         yaxis: {
                             ...prv.options.yaxis,
-                            max: mx + 20
+                            max: mx + 20,
+                            min: min-20
                         }
                     }
                 }))

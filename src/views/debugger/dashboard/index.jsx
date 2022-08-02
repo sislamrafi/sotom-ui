@@ -158,20 +158,20 @@ export default function UserReports() {
           <ApexChart />
           <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px'>
             <ButtonArrayClickable value={debugButton} dbgAddress={addressOfButtons} />
-            <ButtonArrayDisplay value={debugButton} />
-
+            {/* <ButtonArrayDisplay value={debugButton} /> */}
+            <AnalogSlider address={addressOfAnalogDebug} />
           </SimpleGrid>
         </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 1, xl: 2 }} gap='20px' mb='20px'>
+        <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px' mb='20px'>
           <SimpleGrid columns={{ base: 1, md: 1, xl: 1 }} gap='20px'>
-            <AnalogSlider address={addressOfAnalogDebug} />
+            
             <SearchAddress value={debugButton} />
           </SimpleGrid>
 
-          <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
+          {/* <SimpleGrid columns={{ base: 1, md: 2, xl: 2 }} gap='20px'>
             <PieCard />
             <MiniCalendar h='100%' minW='100%' selectRange={false} />
-          </SimpleGrid>
+          </SimpleGrid> */}
         </SimpleGrid>
       </Box>
   );

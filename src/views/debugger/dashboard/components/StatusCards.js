@@ -67,6 +67,7 @@ export default function StatusCards(props) {
 
         if (sclk != sysClockSpeed.current) {
             sysClockSpeed.current = sclk
+            setState(prv => prv + 1)
         }
 
     }

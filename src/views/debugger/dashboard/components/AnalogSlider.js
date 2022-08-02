@@ -87,7 +87,7 @@ export function AnalogSlider(props) {
 
                 <Flex align='center'>
                     <Text color='green.500' fontSize='sm' fontWeight='700'>
-                        0x{sliderValue.toString(16)}
+                        0x{sliderValue==null?0:sliderValue.toString(16)}
                     </Text>
                 </Flex>
             </Flex>

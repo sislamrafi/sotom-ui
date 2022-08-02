@@ -25,7 +25,7 @@ export default function ButtonArrayClickable(props) {
   }
 
   const [switchArray, setSwitchArray] = useState(valueToBar(0))
-  
+
 
   const analogIoAddress = useRef(0)
   const oldValue = useRef(0)
@@ -41,8 +41,8 @@ export default function ButtonArrayClickable(props) {
 
   const onSuccessCall = (res) => {
     analogIoAddress.current = res.data.address
-    if (oldValue.current == res.data.value)return;
-    oldValue.current = res.data.value
+    if (oldValue.current == res.data.value) return;
+    oldValue.current = res.data.value??0
     setSwitchArray(valueToBar(res.data.value))
   }
 
@@ -51,10 +51,10 @@ export default function ButtonArrayClickable(props) {
     val[index] = val[index] ? false : true;
     setSwitchArray(val)
     let command = 'write16'
-    if(val[index])
-    oldValue.current |= (1<<index)
+    if (val[index])
+      oldValue.current |= (1 << index)
     else
-    oldValue.current &= ~(1<<index)
+      oldValue.current &= ~(1 << index) 
     ApiLoaderSotom.commandDevice(command, analogIoAddress.current, oldValue.current, null)
   }
 
@@ -87,16 +87,24 @@ export default function ButtonArrayClickable(props) {
 
   return (
     <Card p='20px' align='center' direction='column' w='100%' >
-      <Flex
-        px={{ base: "0px", "2xl": "10px" }}
-        justifyContent='space-between'
-        alignItems='center'
-        w='100%'
-        mb='8px'>
-        <Text color={textColor} fontSize='md' fontWeight='600' mt='4px'>
-          Debug Button Switch
-        </Text>
+      <Flex justify='space-between' align='start' px='10px' pt='5px'>
+        <Flex
+          px={{ base: "0px", "2xl": "10px" }}
+          justifyContent='space-between'
+          alignItems='center'
+          w='100%'
+          mb='8px'>
+          <Text color={textColor} fontSize='md' fontWeight='600' mt='4px'>
+            Debug Button Switch
+          </Text>
 
+        </Flex>
+
+        <Flex align='center'>
+          <Text color='green.500' fontSize='sm' fontWeight='700'>
+            0x{oldValue.current.toString(16).padStart(4, '0')}
+          </Text>
+        </Flex>
       </Flex>
 
 
@@ -118,7 +126,7 @@ export default function ButtonArrayClickable(props) {
               return switchArray.map((x, i) =>
                 <Checkbox onChange={(e) => handlechange(e, i)} isChecked={x} key={i} size='sm' >  {i.toString()}&nbsp;</Checkbox>);
             })}
-            
+
 
           </SimpleGrid>
           {/* <Checkbox onChange={(e) =>this.handlechange(e,3)} isChecked={this.state.cb1}  size='sm' > h</Checkbox>
