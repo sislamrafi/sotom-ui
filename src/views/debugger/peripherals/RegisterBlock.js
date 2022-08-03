@@ -51,8 +51,8 @@ const RegisterBlock = ({
       spacing={'0'}
       // width={'fit-content'}
       direction={'column'}
-      border={'1px'}
-      borderColor={'gray.500'}
+      // border={'1px'}
+      // borderColor={'gray.500'}
     >
       <Flex
         margin={'0'}
@@ -74,6 +74,16 @@ const RegisterBlock = ({
           </Text>
         ))}
       </Flex>
+
+      <Text
+        border={'1px'}
+        colorScheme={'brand'}
+        paddingX={'4'}
+        paddingY={'1'}
+        textAlign={'center'}
+      >
+        {blockTitle}
+      </Text>
       <Flex margin={'0'} alignItems={'center'} borderBottom={'1px'}>
         {bitValues.map((val, idx) => (
           <Text
@@ -82,20 +92,14 @@ const RegisterBlock = ({
             key={idx}
             flex={'1'}
             align={'center'}
-            borderLeft={idx && idx < bitValues.length && '1px'}
+            borderInline={'1px'}
+            // borderLeft={'1px'}
+            // borderRight={'1px'}
           >
             {val}
           </Text>
         ))}
       </Flex>
-      {/* <Text
-        colorScheme={'brand'}
-        paddingX={'4'}
-        paddingY={'1'}
-        textAlign={'center'}
-      >
-        {blockTitle}
-      </Text> */}
     </Flex>
   );
 };

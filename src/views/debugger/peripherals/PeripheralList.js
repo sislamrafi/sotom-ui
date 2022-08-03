@@ -9,8 +9,10 @@ import {
   Flex,
   HStack,
   Text,
+  useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 
 const perilist = [
   {
@@ -62,6 +64,16 @@ const perilist = [
       {
         regName: 'SR',
         offset: '0x00',
+        bitInfos: [
+          {
+            size: 1,
+            title: 'RXNE',
+          },
+          {
+            size: 1,
+            title: 'TXE',
+          },
+        ]
       },
       {
         regName: 'DR',
@@ -293,13 +305,12 @@ const perilist = [
       },
     ],
   },
-  
 ];
 
 const PeripheralAccordionItem = ({ peri }) => {
   return (
     <AccordionItem
-      backgroundColor={'#F4F7FE'}
+      backgroundColor={useColorModeValue('#F4F7FE', 'navy.900')}
       mb={2}
       justifyContent={'space-between'}
       border={'none'}
@@ -323,7 +334,7 @@ const PeripheralAccordionItem = ({ peri }) => {
             {peri.subPeriList && (
               <AccordionPanel pb={4}>
                 <VStack>
-                  {peri.subPeriList?.map((subperi, idx) => {
+                  {peri.subPeriList.map((subperi, idx) => {
                     return (
                       <Button
                         w={'full'}
@@ -347,22 +358,21 @@ const PeripheralAccordionItem = ({ peri }) => {
 
 const PeripheralList = (props) => {
   return (
-    <Accordion
-      {...props}
-      // defaultIndex={[0]}
-      // allowMultiple
-      allowToggle
-      p={4}
-      mr={2}
-      maxH={'84vh'}
-      backgroundColor={'white'}
-      borderRadius={'2xl'}
-      overflow={'auto'}
-    >
-      {perilist.map((peri, idx) => {
-        return <PeripheralAccordionItem key={idx} peri={peri} />;
-      })}
-    </Accordion>
+    <Flex mr={2} maxH={'84vh'} borderRadius={'2xl'} overflow={'hidden'} {...props}>
+      <Scrollbars autoHide style={{ width: '100%', height: '84vh', overflowX: 'hidden' }}>
+        <Accordion
+          w={'full'}
+          allowToggle
+          p={4}
+          overflow={'auto'}
+          backgroundColor={useColorModeValue('white', 'navy.800')}
+        >
+          {perilist.map((peri, idx) => {
+            return <PeripheralAccordionItem key={idx} peri={peri} />;
+          })}
+        </Accordion>
+      </Scrollbars>
+    </Flex>
   );
 };
 
