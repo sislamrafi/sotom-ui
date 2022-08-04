@@ -79,6 +79,7 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
                   peri.map((subperi, idx) => {
                     return (
                       <RegButton
+                        key={idx}
                         periName={subperi.name}
                         peribaseAddress={subperi.address}
                       />
