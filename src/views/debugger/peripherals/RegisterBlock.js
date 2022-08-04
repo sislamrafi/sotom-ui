@@ -49,34 +49,34 @@ const RegisterBlock = ({
   return (
     <Flex
       spacing={'0'}
-      // width={'fit-content'}
       direction={'column'}
-      // border={'1px'}
-      // borderColor={'gray.500'}
+      my={2}
     >
+      {/* bit positions */}
       <Flex
         margin={'0'}
         alignItems={'center'}
         columnGap={4}
-        p={2}
-        borderBottom={'1px'}
+        px={2}
+        // borderWidth={'1px 1px 0px 1px'}
+        // borderStyle={'solid'}
+        // borderColor={'gray.500'}
       >
         {bitPos.map((val, idx) => (
           <Text
-            // fontFamily={'Courier Prime'}
-            color={'green.600'}
+            color={'green.500'}
             key={idx}
             flex={'1'}
             align={'center'}
-            // whiteSpace={'pre'}
           >
             {val.toString()}
           </Text>
         ))}
       </Flex>
-
+      {/* block title */}
       <Text
         border={'1px'}
+        borderColor={'gray.500'}
         colorScheme={'brand'}
         paddingX={'4'}
         paddingY={'1'}
@@ -84,17 +84,20 @@ const RegisterBlock = ({
       >
         {blockTitle}
       </Text>
-      <Flex margin={'0'} alignItems={'center'} borderBottom={'1px'}>
+      {/* bit values */}
+      <Flex
+        margin={'0'}
+        alignItems={'center'}
+        borderBottom={'1px'}
+        borderColor={'gray.500'}
+      >
         {bitValues.map((val, idx) => (
           <Text
-            // fontFamily={'DM Mono'}
-            // fontFamily={'Courier Prime'}
             key={idx}
             flex={'1'}
             align={'center'}
             borderInline={'1px'}
-            // borderLeft={'1px'}
-            // borderRight={'1px'}
+            borderColor={'gray.500'}
           >
             {val}
           </Text>

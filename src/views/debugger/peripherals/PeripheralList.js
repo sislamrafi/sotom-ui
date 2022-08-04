@@ -17,305 +17,78 @@ import { Scrollbars } from 'react-custom-scrollbars-2';
 const perilist = [
   {
     periName: 'GPIO',
-    baseAddess: '0x40001400',
+    baseAddress: '0x40001400',
     subPeriList: [
       {
         subPeriName: 'GPIOA',
-        baseAddess: '0x40014014',
+        baseAddress: '0x40014014',
       },
       {
         subPeriName: 'GPIOB',
-        baseAddess: '0x4001408C',
+        baseAddress: '0x4001408C',
       },
       {
         subPeriName: 'GPIOC',
-        baseAddess: '0x400140F0',
-      },
-    ],
-    periRegisters: [
-      {
-        regName: 'MODER',
-        offset: '0x00',
-      },
-      {
-        regName: 'ODR',
-        offset: '0xA0',
+        baseAddress: '0x400140F0',
       },
     ],
   },
   {
     periName: 'USART',
-    baseAddess: '0x40005400',
+    baseAddress: '0x40005400',
     subPeriList: [
       {
         subPeriName: 'USART1',
-        baseAddess: '0x40014014',
+        baseAddress: '0x40014014',
       },
       {
         subPeriName: 'USART2',
-        baseAddess: '0x4001408C',
+        baseAddress: '0x4001408C',
       },
       {
         subPeriName: 'USART3',
-        baseAddess: '0x400140F0',
-      },
-    ],
-    periRegisters: [
-      {
-        regName: 'SR',
-        offset: '0x00',
-        bitInfos: [
-          {
-            size: 1,
-            title: 'RXNE',
-          },
-          {
-            size: 1,
-            title: 'TXE',
-          },
-        ]
-      },
-      {
-        regName: 'DR',
-        offset: '0xA0',
+        baseAddress: '0x400140F0',
       },
     ],
   },
   {
     periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddess: '0x40234030',
-    periRegisters: [
-      {
-        regName: 'AHB1ENR',
-        offset: '0x00',
-      },
-      {
-        regName: 'APB1ENR',
-        offset: '0x04',
-      },
-    ],
+    baseAddress: '0x40234030',
   },
 ];
 
-const PeripheralAccordionItem = ({ peri }) => {
+const RegButton = ({ periName, peribaseAddress, ...props }) => {
+  return (
+    <Button
+      w={'full'}
+      fontWeight={'light'}
+      _focus={{ border: '1px' }}
+      fontSize={'sm'}
+      {...props}
+    >
+      <Flex
+        w={'full'}
+        justifyContent={'space-between'}
+        direction={['column', 'row']}
+        gap={2}
+      >
+        <Text>{periName}</Text>
+        <Text fontFamily={'mono'}>{peribaseAddress}</Text>
+      </Flex>
+    </Button>
+  );
+};
+
+const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
   return (
     <AccordionItem
       backgroundColor={useColorModeValue('#F4F7FE', 'navy.900')}
-      mb={2}
+      m={3}
       justifyContent={'space-between'}
       border={'none'}
       borderRadius={'lg'}
       overflow={'hidden'}
+      {...props}
     >
       {({ isExpanded }) => {
         return (
@@ -331,24 +104,25 @@ const PeripheralAccordionItem = ({ peri }) => {
               </Box>
               <AccordionIcon />
             </AccordionButton>
-            {peri.subPeriList && (
-              <AccordionPanel pb={4}>
-                <VStack>
-                  {peri.subPeriList.map((subperi, idx) => {
+            <AccordionPanel pb={4}>
+              <VStack>
+                {peri.subPeriList ? (
+                  peri.subPeriList.map((subperi, idx) => {
                     return (
-                      <Button
-                        w={'full'}
-                        key={idx}
-                        fontWeight={'light'}
-                        _focus={{ border: '1px' }}
-                      >
-                        <Text>{subperi.subPeriName}</Text>
-                      </Button>
+                      <RegButton
+                        periName={subperi.subPeriName}
+                        peribaseAddress={subperi.baseAddress}
+                      />
                     );
-                  })}
-                </VStack>
-              </AccordionPanel>
-            )}
+                  })
+                ) : (
+                  <RegButton
+                    periName={peri.periName}
+                    peribaseAddress={peri.baseAddress}
+                  />
+                )}
+              </VStack>
+            </AccordionPanel>
           </>
         );
       }}
@@ -358,20 +132,28 @@ const PeripheralAccordionItem = ({ peri }) => {
 
 const PeripheralList = (props) => {
   return (
-    <Flex mr={2} maxH={'84vh'} borderRadius={'2xl'} overflow={'hidden'} {...props}>
-      <Scrollbars autoHide style={{ width: '100%', height: '84vh', overflowX: 'hidden' }}>
-        <Accordion
-          w={'full'}
-          allowToggle
-          p={4}
-          overflow={'auto'}
-          backgroundColor={useColorModeValue('white', 'navy.800')}
+    <Flex
+      mr={2}
+      maxH={'84vh'}
+      borderRadius={'2xl'}
+      overflow={'hidden'}
+      {...props}
+    >
+      <Accordion
+        w={'full'}
+        allowToggle
+        p={2}
+        backgroundColor={useColorModeValue('white', 'navy.800')}
+      >
+        <Scrollbars
+          autoHide
+          style={{ width: '100%', height: '84vh', overflowX: 'hidden' }}
         >
           {perilist.map((peri, idx) => {
             return <PeripheralAccordionItem key={idx} peri={peri} />;
           })}
-        </Accordion>
-      </Scrollbars>
+        </Scrollbars>
+      </Accordion>
     </Flex>
   );
 };
