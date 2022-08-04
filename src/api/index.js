@@ -105,6 +105,22 @@ class ApiLoaderSotom {
                 onFailureCallback(err)
             })
     }
+
+    static getPeripherals(onSuccessCallback, onFailureCallback) {
+        axios
+            .get(ApiLoaderSotom.getHostURL() + "get_peripherals/", {
+                params: {
+                    
+                }
+            })
+            .then(res => {
+                console.log(res);
+                onSuccessCallback(res)
+            })
+            .catch(err => {
+                onFailureCallback(err)
+            })
+    }
 }
 
 export default ApiLoaderSotom;

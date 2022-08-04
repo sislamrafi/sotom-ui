@@ -12,50 +12,19 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import ApiLoaderSotom from 'api';
+import { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 
-const perilist = [
-  {
-    periName: 'GPIO',
-    baseAddress: '0x40001400',
-    subPeriList: [
-      {
-        subPeriName: 'GPIOA',
-        baseAddress: '0x40014014',
-      },
-      {
-        subPeriName: 'GPIOB',
-        baseAddress: '0x4001408C',
-      },
-      {
-        subPeriName: 'GPIOC',
-        baseAddress: '0x400140F0',
-      },
-    ],
-  },
-  {
-    periName: 'USART',
-    baseAddress: '0x40005400',
-    subPeriList: [
-      {
-        subPeriName: 'USART1',
-        baseAddress: '0x40014014',
-      },
-      {
-        subPeriName: 'USART2',
-        baseAddress: '0x4001408C',
-      },
-      {
-        subPeriName: 'USART3',
-        baseAddress: '0x400140F0',
-      },
-    ],
-  },
-  {
-    periName: 'RCC',
-    baseAddress: '0x40234030',
-  },
-];
+const perilist = {
+  gpio:[
+    {name:"gpioa",address:'0x0001'},
+    {name:"gpiob",address:'0x0002'},
+  ],
+  dma:[
+    {name:"dma",address:'0x0001'},
+  ]
+};
 
 const RegButton = ({ periName, peribaseAddress, ...props }) => {
   return (
@@ -73,7 +42,7 @@ const RegButton = ({ periName, peribaseAddress, ...props }) => {
         gap={2}
       >
         <Text>{periName}</Text>
-        <Text fontFamily={'mono'}>{peribaseAddress}</Text>
+        <Text fontFamily={'mono'}>0x{peribaseAddress.toString(16)}</Text>
       </Flex>
     </Button>
   );
@@ -100,25 +69,25 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
               color={isExpanded ? 'brand.500' : 'currentColor'}
             >
               <Box flex='1' textAlign='left'>
-                {peri.periName}
+                {props.name}
               </Box>
               <AccordionIcon />
             </AccordionButton>
             <AccordionPanel pb={4}>
               <VStack>
-                {peri.subPeriList ? (
-                  peri.subPeriList.map((subperi, idx) => {
+                {peri.length>0 ? (
+                  peri.map((subperi, idx) => {
                     return (
                       <RegButton
-                        periName={subperi.subPeriName}
-                        peribaseAddress={subperi.baseAddress}
+                        periName={subperi.name}
+                        peribaseAddress={subperi.address}
                       />
                     );
                   })
                 ) : (
                   <RegButton
-                    periName={peri.periName}
-                    peribaseAddress={peri.baseAddress}
+                    periName={peri[0].name+'56'}
+                    peribaseAddress={peri[0].address}
                   />
                 )}
               </VStack>
@@ -131,6 +100,16 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
 };
 
 const PeripheralList = (props) => {
+  const [peripheras,setPeripheras] = useState({})
+
+  const onSuccessCallback = (res)=> {
+    setPeripheras(res.data['peripherals'])
+  }
+
+  useEffect(()=>{
+    ApiLoaderSotom.getPeripherals(onSuccessCallback)
+  },[])
+
   return (
     <Flex
       mr={2}
@@ -149,8 +128,8 @@ const PeripheralList = (props) => {
           autoHide
           style={{ width: '100%', height: '84vh', overflowX: 'hidden' }}
         >
-          {perilist.map((peri, idx) => {
-            return <PeripheralAccordionItem key={idx} peri={peri} />;
+          {Object.entries(peripheras).map(([key,value],idx) => {
+            return <PeripheralAccordionItem key={idx} peri={value} name={key} />;
           })}
         </Scrollbars>
       </Accordion>
