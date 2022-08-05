@@ -49,53 +49,60 @@ const RegisterBlock = ({
   return (
     <Flex
       spacing={'0'}
-      // width={'fit-content'}
       direction={'column'}
-      border={'1px'}
-      borderColor={'gray.500'}
+      my={2}
     >
+      {/* bit positions */}
       <Flex
         margin={'0'}
         alignItems={'center'}
         columnGap={4}
-        p={2}
-        borderBottom={'1px'}
+        px={2}
+        // borderWidth={'1px 1px 0px 1px'}
+        // borderStyle={'solid'}
+        // borderColor={'gray.500'}
       >
         {bitPos.map((val, idx) => (
           <Text
-            // fontFamily={'Courier Prime'}
-            color={'green.600'}
+            color={'green.500'}
             key={idx}
             flex={'1'}
             align={'center'}
-            // whiteSpace={'pre'}
           >
             {val.toString()}
           </Text>
         ))}
       </Flex>
-      <Flex margin={'0'} alignItems={'center'} borderBottom={'1px'}>
-        {bitValues.map((val, idx) => (
-          <Text
-            // fontFamily={'DM Mono'}
-            // fontFamily={'Courier Prime'}
-            key={idx}
-            flex={'1'}
-            align={'center'}
-            borderLeft={idx && idx < bitValues.length && '1px'}
-          >
-            {val}
-          </Text>
-        ))}
-      </Flex>
-      {/* <Text
+      {/* block title */}
+      <Text
+        border={'1px'}
+        borderColor={'gray.500'}
         colorScheme={'brand'}
         paddingX={'4'}
         paddingY={'1'}
         textAlign={'center'}
       >
         {blockTitle}
-      </Text> */}
+      </Text>
+      {/* bit values */}
+      <Flex
+        margin={'0'}
+        alignItems={'center'}
+        borderBottom={'1px'}
+        borderColor={'gray.500'}
+      >
+        {bitValues.map((val, idx) => (
+          <Text
+            key={idx}
+            flex={'1'}
+            align={'center'}
+            borderInline={'1px'}
+            borderColor={'gray.500'}
+          >
+            {val}
+          </Text>
+        ))}
+      </Flex>
     </Flex>
   );
 };
