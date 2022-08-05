@@ -12,21 +12,22 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import { isNull } from '@chakra-ui/utils';
 import ApiLoaderSotom from 'api';
 import { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 
 const perilist = {
-  gpio:[
-    {name:"gpioa",address:'0x0001'},
-    {name:"gpiob",address:'0x0002'},
+  gpio: [
+    { name: "gpioa", address: '0x0001' },
+    { name: "gpiob", address: '0x0002' },
   ],
-  dma:[
-    {name:"dma",address:'0x0001'},
+  dma: [
+    { name: "dma", address: '0x0001' },
   ]
 };
 
-const RegButton = ({ periName, peribaseAddress, ...props }) => {
+const RegButton = ({ periClicked, periId, periName, peribaseAddress, ...props }) => {
   return (
     <Button
       w={'full'}
@@ -48,7 +49,8 @@ const RegButton = ({ periName, peribaseAddress, ...props }) => {
   );
 };
 
-const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
+const PeripheralAccordionItem = ({ peri, ...props }) => {
+  const { periClicked } = props;
   return (
     <AccordionItem
       backgroundColor={useColorModeValue('#F4F7FE', 'navy.900')}
@@ -57,7 +59,6 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
       border={'none'}
       borderRadius={'lg'}
       overflow={'hidden'}
-      {...props}
     >
       {({ isExpanded }) => {
         return (
@@ -75,11 +76,12 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
             </AccordionButton>
             <AccordionPanel pb={4}>
               <VStack>
-                {peri.length>0 ? (
+                {peri.length > 0 ? (
                   peri.map((subperi, idx) => {
                     return (
                       <RegButton
                         key={idx}
+                        onClick={() => periClicked(subperi)}
                         periName={subperi.name}
                         peribaseAddress={subperi.address}
                       />
@@ -87,7 +89,7 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
                   })
                 ) : (
                   <RegButton
-                    periName={peri[0].name+'56'}
+                    periName={peri[0].name + '56'}
                     peribaseAddress={peri[0].address}
                   />
                 )}
@@ -101,15 +103,17 @@ const PeripheralAccordionItem = ({ peri = perilist[0], ...props }) => {
 };
 
 const PeripheralList = (props) => {
-  const [peripheras,setPeripheras] = useState({})
+  const { periclicked } = props
+  const [peripheras, setPeripheras] = useState({})
 
-  const onSuccessCallback = (res)=> {
+  const onSuccessCallback = (res) => {
     setPeripheras(res.data['peripherals'])
+    periclicked(res.data['peripherals'][Object.keys(res.data['peripherals'])[0]][0])
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     ApiLoaderSotom.getPeripherals(onSuccessCallback)
-  },[])
+  }, [])
 
   return (
     <Flex
@@ -117,7 +121,8 @@ const PeripheralList = (props) => {
       maxH={'84vh'}
       borderRadius={'2xl'}
       overflow={'hidden'}
-      {...props}
+      flex={1}
+
     >
       <Accordion
         w={'full'}
@@ -129,9 +134,9 @@ const PeripheralList = (props) => {
           autoHide
           style={{ width: '100%', height: '84vh', overflowX: 'hidden' }}
         >
-          {Object.entries(peripheras).map(([key,value],idx) => {
-            return <PeripheralAccordionItem key={idx} peri={value} name={key} />;
-          })}
+          {!isNull(peripheras) ? Object.entries(peripheras).map(([key, value], idx) => {
+            return <PeripheralAccordionItem key={idx} peri={value} name={key} periClicked={periclicked} />;
+          }) : (<Text>Loading..</Text>)}
         </Scrollbars>
       </Accordion>
     </Flex>

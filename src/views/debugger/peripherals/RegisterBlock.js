@@ -1,4 +1,5 @@
 import { Flex, Box, Text } from '@chakra-ui/react';
+import { memo } from 'react';
 
 const RegisterBlock2 = ({
   bitPos = [0, 1],
@@ -107,4 +108,4 @@ const RegisterBlock = ({
   );
 };
 
-export default RegisterBlock;
+export default memo(RegisterBlock);
