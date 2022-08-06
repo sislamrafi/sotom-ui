@@ -16,7 +16,7 @@ const PeripheralView = ({ ...props }) => {
   const [registers, setRegisters] = useState([])
   
   const registerList = useRef([])
-  const [regValues,setRegValues] = useState([]);
+  // const [regValues,setRegValues] = useState([]);
 
   const onSuccessCallback = (res) => {
     console.log(res.data['registers']);
@@ -28,9 +28,9 @@ const PeripheralView = ({ ...props }) => {
     ApiLoaderSotom.getPeripheralById(peripheral.id, onSuccessCallback)
   }, [peripheral])
 
+  console.log('aaaaads;flkasjdf')
   return (
     <Flex
-      {...props}
       backgroundColor={useColorModeValue('white', 'navy.800')}
       borderRadius={'2xl'}
       direction={'column'}
@@ -38,6 +38,7 @@ const PeripheralView = ({ ...props }) => {
       gap={2}
       maxH={'84vh'}
       overflow={'auto'}
+      {...props}
     >
       <Flex alignItems={'center'} justifyContent={'space-between'}>
         <Text fontSize={'2xl'} fontWeight={'bold'} color={periColor}>
