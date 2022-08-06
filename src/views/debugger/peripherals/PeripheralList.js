@@ -7,27 +7,30 @@ import {
   Box,
   Button,
   Flex,
-  HStack,
   Text,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import { isNull } from '@chakra-ui/utils';
 import ApiLoaderSotom from 'api';
+import { SearchBar } from '../../../components/navbar/searchBar/SearchBar';
 import { useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars-2';
 
-const perilist = {
-  gpio: [
-    { name: "gpioa", address: '0x0001' },
-    { name: "gpiob", address: '0x0002' },
-  ],
-  dma: [
-    { name: "dma", address: '0x0001' },
-  ]
-};
+// const perilist = {
+//   gpio: [
+//     { name: 'gpioa', address: '0x0001' },
+//     { name: 'gpiob', address: '0x0002' },
+//   ],
+//   dma: [{ name: 'dma', address: '0x0001' }],
+// };
 
-const RegButton = ({ periClicked, periId, periName, peribaseAddress, ...props }) => {
+const RegButton = ({
+  periClicked,
+  periId,
+  periName,
+  peribaseAddress,
+  ...props
+}) => {
   return (
     <Button
       w={'full'}
@@ -49,8 +52,7 @@ const RegButton = ({ periClicked, periId, periName, peribaseAddress, ...props })
   );
 };
 
-const PeripheralAccordionItem = ({ peri, ...props }) => {
-  const { periClicked } = props;
+const PeripheralAccordionItem = ({ peri, onPeriSelect, ...props }) => {
   return (
     <AccordionItem
       backgroundColor={useColorModeValue('#F4F7FE', 'navy.900')}
@@ -81,7 +83,7 @@ const PeripheralAccordionItem = ({ peri, ...props }) => {
                     return (
                       <RegButton
                         key={idx}
-                        onClick={() => periClicked(subperi)}
+                        onClick={() => onPeriSelect(subperi)}
                         periName={subperi.name}
                         peribaseAddress={subperi.address}
                       />
@@ -102,19 +104,22 @@ const PeripheralAccordionItem = ({ peri, ...props }) => {
   );
 };
 
-const PeripheralList = (props) => {
-  const { periclicked } = props
-  const [peripheras, setPeripheras] = useState({})
+const PeripheralList = ({ onPeriSelect, ...props }) => {
+  const [peripherals, setPeripherals] = useState([]);
+  const [searchKey, setSearchKey] = useState('');
 
   const onSuccessCallback = (res) => {
-    setPeripheras(res.data['peripherals'])
-    periclicked(res.data['peripherals'][Object.keys(res.data['peripherals'])[0]][0])
-  }
+    const peripherals = Object.entries(res.data['peripherals']);
+    setPeripherals(peripherals);
+    onPeriSelect(peripherals[0][1][0]);
+  };
 
   useEffect(() => {
-    ApiLoaderSotom.getPeripherals(onSuccessCallback)
-  }, [])
+    ApiLoaderSotom.getPeripherals(onSuccessCallback);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  console.log('haha');
   return (
     <Flex
       mr={2}
@@ -122,11 +127,11 @@ const PeripheralList = (props) => {
       borderRadius={'2xl'}
       overflow={'hidden'}
       flex={1}
-
+      {...props}
     >
       <Accordion
         w={'full'}
-        allowToggle
+        allowMultiple
         p={2}
         backgroundColor={useColorModeValue('white', 'navy.800')}
       >
@@ -134,9 +139,31 @@ const PeripheralList = (props) => {
           autoHide
           style={{ width: '100%', height: '84vh', overflowX: 'hidden' }}
         >
-          {!isNull(peripheras) ? Object.entries(peripheras).map(([key, value], idx) => {
-            return <PeripheralAccordionItem key={idx} peri={value} name={key} periClicked={periclicked} />;
-          }) : (<Text>Loading..</Text>)}
+          <Box p={2}>
+            <SearchBar
+              onClick={setSearchKey}
+              onKeyUp={setSearchKey}
+              w={'full'}
+            />
+          </Box>
+          {peripherals.length > 0 ? (
+            peripherals
+              .filter(
+                ([key, value]) => key.indexOf(searchKey.toUpperCase()) !== -1
+              )
+              .map(([key, value], idx) => {
+                return (
+                  <PeripheralAccordionItem
+                    key={idx}
+                    peri={value}
+                    name={key}
+                    onPeriSelect={onPeriSelect}
+                  />
+                );
+              })
+          ) : (
+            <Text>Loading..</Text>
+          )}
         </Scrollbars>
       </Accordion>
     </Flex>

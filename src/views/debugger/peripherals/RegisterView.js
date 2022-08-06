@@ -1,5 +1,5 @@
 import ApiLoaderSotom from "api";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import RegisterBlock from "./RegisterBlock";
 
 const { Flex, Text } = require("@chakra-ui/react");
@@ -9,9 +9,9 @@ const RegisterView = ({ ...props }) => {
     const [regValue, setRegValue] = useState(0);
     const bitLen = useRef(0);
 
-    const getBitInPosFromInt = (regValueDecimal = 0, pos = 0) => {
+    const getBitInPosFromInt = useCallback((regValueDecimal = 0, pos = 0) => {
         return ((regValueDecimal >> pos) & 1).toString()[0];
-    };
+    }, []);
 
     let pos = bitLen.current
 
