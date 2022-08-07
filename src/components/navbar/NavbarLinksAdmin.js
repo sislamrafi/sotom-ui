@@ -28,7 +28,8 @@ import {
   MdInfoOutline, MdRestartAlt,
   MdOutlineCancel, MdPauseCircleOutline,
   MdResetTv, MdPlayCircleOutline,
-  MdOutlineFlashOn,
+  MdOutlineFlashOn,MdOutlineArrowForwardIos,
+  MdBuild
 } from "react-icons/md";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { FaEthereum } from "react-icons/fa";
@@ -72,6 +73,16 @@ export default function HeaderLinks(props) {
   const onCommandSuccess = (res) => {
     console.log(res.data);
     setStateOfActions(res.data['device_state'])
+
+    if(res.data['command']=='build'){
+      setBuildColor(navbarIcon)
+    }
+  }
+
+  const onCommandErr = (err,command) => {
+    if(command=='build'){
+      setBuildColor('red')
+    }
   }
 
   const callCommand = (command) => {
@@ -91,6 +102,8 @@ export default function HeaderLinks(props) {
   const [haltColor, setHaltColor] = useState(navbarIcon);
   const [resetHaltColor, setResetHaltColor] = useState(navbarIcon);
   const [resumeColor, setResumeColor] = useState(navbarIcon);
+
+  const [buildColor, setBuildColor] = useState(navbarIcon);
 
   useColorModeValue("gray.400", "white");
 
@@ -155,6 +168,26 @@ export default function HeaderLinks(props) {
             w='18px'
             as={MdPlayCircleOutline}
             color={resumeColor}
+          />
+        </Button>
+      </Tooltip>
+
+      <Tooltip label='Step' fontSize='md'>
+        <Button
+          variant='no-hover'
+          bg='transparent'
+          p='0px'
+          minW='unset'
+          minH='unset'
+          h='18px'
+          w='max-content'
+          onClick={() => callCommand('step')}>
+          <Icon
+            me='10px'
+            h='18px'
+            w='18px'
+            as={MdOutlineArrowForwardIos}
+            color={navbarIcon}
           />
         </Button>
       </Tooltip>
@@ -225,6 +258,7 @@ export default function HeaderLinks(props) {
         </Button>
       </Tooltip>
 
+      
       <Tooltip label='Flash' fontSize='md'>
         <Button
           variant='no-hover'
@@ -237,11 +271,31 @@ export default function HeaderLinks(props) {
           w='max-content'
           onClick={() => callCommand('flash')}>
           <Icon
-            me='10px'
+            me='0px'
             h='18px'
             w='18px'
             color={navbarIcon}
             as={MdOutlineFlashOn}
+          />
+        </Button>
+      </Tooltip>
+
+      <Tooltip label='Build' fontSize='md'>
+        <Button
+          variant='no-hover'
+          bg='transparent'
+          p='0px'
+          minW='unset'
+          minH='unset'
+          h='18px'
+          w='max-content'
+          onClick={() => {setBuildColor('yellow') ;callCommand('build')}}>
+          <Icon
+            me='10px'
+            h='16px'
+            w='16px'
+            color={buildColor}
+            as={MdBuild}
           />
         </Button>
       </Tooltip>

@@ -59,7 +59,7 @@ const RegisterView = ({ ...props }) => {
                         borderRadius={'lg'}
                         backgroundColor={regValuesBgColor}
                     >
-                        0x{regValue.toString(16)}
+                        0x{regValue?.toString(16)}
                     </Text>
                 </Flex>
                 <Flex
