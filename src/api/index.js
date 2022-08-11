@@ -61,7 +61,7 @@ class ApiLoaderSotom {
                 console.log(res.data);
 
                 if (command != null)
-                    window.miniTerminal.updateText("\n>> " + command, false)
+                    window.miniTerminal.updateText("\n>> " + command + "  done", false)
                 if (address != null)
                     window.miniTerminal.updateText(' , 0x' + (address.toString(16)), false)
                 if (value != null)
@@ -72,7 +72,7 @@ class ApiLoaderSotom {
             .catch(err => {
 
                 window.miniTerminal.updateText("\n>> Failed " + command, false)
-                onFailureCallback(err)
+                onFailureCallback(err,command)
             })
     }
 
