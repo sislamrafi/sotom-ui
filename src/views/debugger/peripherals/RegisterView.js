@@ -100,7 +100,7 @@ const RegisterView = ({ ...props }) => {
 
                         for (let i = bitBlock.bit_width - 1; i >= 0; i--) {
                             bitPos.push(--posX);
-                            bitValues.push(getBitInPosFromInt(regValue, posX + i));
+                            bitValues.push(getBitInPosFromInt(regValue, posX));
                         }
                         //pos += bitBlock.bit_width;
 
