@@ -16,7 +16,7 @@ const RegisterView = ({ ...props }) => {
     let pos = bitLen.current
 
     const onSuccessCall = (res) => {
-        //console.log(res.data["value"]);
+        // console.log(res.data["value"]);
         //registerList.current = res.data['registers']
         //setRegisters(res.data['registers']);
         setRegValue(res.data['value'])

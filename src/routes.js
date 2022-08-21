@@ -7,13 +7,14 @@ import {
   MdHome,
   MdLock,
   MdDeviceHub,
+  MdMemory,
   MdRequestQuote,
 } from 'react-icons/md';
 
 // Admin Imports
 import MainDashboard from 'views/debugger/dashboard';
 import Peripherals from 'views/debugger/peripherals';
-import DataTable from 'views/debugger/dataTables';
+import MemoryView from 'views/debugger/memoryview';
 
 const routes = [
   {
@@ -29,6 +30,13 @@ const routes = [
     path: '/peripheral',
     icon: <Icon as={MdDeviceHub} width='20px' height='20px' color='inherit' />,
     component: Peripherals,
+  },
+  {
+    name: 'Memory View',
+    layout: '/debugger',
+    path: '/memoryview',
+    icon: <Icon as={MdMemory} width='20px' height='20px' color='inherit' />,
+    component: MemoryView,
   },
 ];
 

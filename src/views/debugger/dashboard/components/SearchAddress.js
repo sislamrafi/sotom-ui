@@ -37,13 +37,13 @@ export default function SearchAddress(props) {
 
   const onSuccessCallback = (res) => {
     var sec = 'Section: ' + res.data['section'] + ' (Size: ' + res.data['size'] + ')'
-    
+
     address.current = res.data['address'];
-    
+
     setSearchFound(sec)
     setValueReg(res.data['value'] ?? 0)
     setVariableName(res.data['name'])
-    
+
     window.miniTerminal.updateText("\n>> 0x" + res.data['address'].toString(16) + ', ' + res.data['value'], false)
   }
 
@@ -92,7 +92,7 @@ export default function SearchAddress(props) {
   }
 
   useEffect(() => {
-    console.log("Search Button Init");
+    // console.log("Search Button Init");
   }, [])
 
   return (

@@ -55,6 +55,9 @@ export function SearchBar({
         fontSize='sm'
         onChange={handleChange}
         onKeyUp={(e) => {
+          if (e.key == 'Enter') {
+            onClick(textInput);
+          }
           onKeyUp(textInput);
         }}
         bg={background ? background : inputBg}
