@@ -106,6 +106,22 @@ class ApiLoaderSotom {
             })
     }
 
+    static readMemoryBlock(address, size, onSuccessCallback, onFailureCallback) {
+        axios
+            .get(ApiLoaderSotom.getHostURL() + "read_memory_block/", {
+                params: {
+                    'address': address,
+                    'size':size
+                }
+            })
+            .then(res => {
+                onSuccessCallback(res)
+            })
+            .catch(err => {
+                onFailureCallback(err)
+            })
+    }
+
     static getPeripherals(onSuccessCallback, onFailureCallback) {
         axios
             .get(ApiLoaderSotom.getHostURL() + "get_peripherals/", {
